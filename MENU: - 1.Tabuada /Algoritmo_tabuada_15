@@ -1,0 +1,10 @@
+Nome: Tabuada_de_15
+Var: N1, C: Numerico 
+
+Inicio 
+  escreva ("tabuada do 15") 
+   N1=15 
+   Para C de 1 até 10 faça 
+   escreva(n1, "*", c, "=", N1*C) 
+   Fim-para
+Fim
