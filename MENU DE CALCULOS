@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login e Cálculos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .login-container, .menu-container, .container {
+            margin-top: 50px;
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        input, button {
+            margin: 5px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            margin: 15px 0;
+        }
+
+        .menu a {
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .menu a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Login -->
+    <div class="login-container active" id="login">
+        <h2>Tela de Login</h2>
+        <form id="myForm">
+            Nome:<input type="text" id="loginName" required><br><br>
+            Senha:<input type="password" id="loginPassword" required><br><br>
+            <button type="button" onclick="login()">Entrada</button>
+            <button type="button" onclick="sair()">Sair</button>
+        </form>
+        <h3 id="loginMessage" style="color: red;"></h3>
+    </div>
+
+    <!-- Menu Principal -->
+    <div class="menu-container" id="menu">
+        <h1>Menu de Cálculos</h1>
+        <ul class="menu">
+            <li><a href="#" onclick="showSection('salarioLiquido')">Cálculo de Salário Líquido</a></li><br>
+            <li><a href="#" onclick="showSection('descontoInss')">Desconto de INSS</a></li><br>
+            <li><a href="#" onclick="showSection('descontoIr')">Desconto de IR</a></li><br>
+            <li><a href="#" onclick="sair()">Sair</a></li>
+        </ul>
+    </div>
+
+    <!-- Seção Salário Líquido -->
+    <div id="salarioLiquido" class="container">
+        <h2>Cálculo de Salário Líquido</h2>
+        <input type="text" id="name" placeholder="Nome" required><br><br>
+        <input type="number" id="salary" placeholder="Salário" required><br><br>
+        <input type="number" id="discount" placeholder="Desconto" required><br><br>
+        <input type="number" id="children" placeholder="Quantidade de Filhos" required><br><br>
+        <button onclick="calculateNetSalary()">Calcular</button>
+        <h3 id="resultNetSalary" style="margin-top: 20px;"></h3>
+    </div>
+
+    <!-- Seção Desconto INSS -->
+    <div id="descontoInss" class="container">
+        <h2>Desconto INSS</h2>
+        <input type="text" id="nameInss" placeholder="Nome" required><br><br>
+        <input type="number" id="salaryInss" placeholder="Salário" required><br><br>
+        <input type="number" id="discountInss" placeholder="Desconto INSS" required><br><br>
+        <button onclick="calculateInss()">Calcular</button>
+        <h3 id="resultInss" style="margin-top: 20px;"></h3>
+    </div>
+
+    <!-- Seção Desconto IR -->
+    <div id="descontoIr" class="container">
+        <h2>Imposto de Renda</h2>
+        <input type="number" id="salaryIr" placeholder="Salário" required><br><br>
+        <button onclick="calculateIr()">Calcular Imposto</button>
+        <h3 id="resultIr" style="margin-top: 20px;"></h3>
+    </div>
+
+    <script>
+        // Função para login
+        function login() {
+            const name = document.getElementById('loginName').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Valida o nome e a senha
+            if (name === 'karina' && password === '1234') {
+                document.getElementById('login').classList.remove('active');
+                document.getElementById('menu').classList.add('active');
+            } else {
+                document.getElementById('loginMessage').innerText = 'Nome ou senha incorretos!';
+            }
+        }
+
+        // Função para exibir a seção correspondente ao menu clicado
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.container');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Função para cálculo do salário líquido
+        function calculateNetSalary() {
+            const name = document.getElementById('name').value;
+            const salary = parseFloat(document.getElementById('salary').value);
+            const discount = parseFloat(document.getElementById('discount').value);
+            const children = parseInt(document.getElementById('children').value);
+
+            const bonusPerChild = 100;
+            const totalBonus = children * bonusPerChild;
+            const netSalary = salary + totalBonus - discount;
+
+            document.getElementById('resultNetSalary').innerText = `Salário Líquido de ${name}: R$ ${netSalary.toFixed(2)}`;
+        }
+
+        // Função para cálculo do desconto de INSS
+        function calculateInss() {
+            const name = document.getElementById('nameInss').value;
+            const salary = parseFloat(document.getElementById('salaryInss').value);
+            const discount = parseFloat(document.getElementById('discountInss').value);
+            const netSalary = salary - discount;
+
+            document.getElementById('resultInss').innerText = `Salário Líquido de ${name}: R$ ${netSalary.toFixed(2)}`;
+        }
+
+        // Função para cálculo do imposto de renda (IR)
+        function calculateIr() {
+            const salary = parseFloat(document.getElementById('salaryIr').value);
+            let tax = 0;
+
+            if (salary < 2000) {
+                tax = salary * 0.30; // 30% para salário menor que 2000 reais
+            } else {
+                tax = salary * 0.40; // 40% para salário maior que 2000 reais
+            }
+
+            document.getElementById('resultIr').innerText = `Imposto de Renda: R$ ${tax.toFixed(2)}`;
+        }
+
+        // Função para sair da aplicação
+        function sair() {
+            if (confirm("Você realmente deseja sair?")) {
+                window.close(); // Tenta fechar a janela (depende do navegador)
+            }
+        }
+    </script>
+</body>
+</html>
